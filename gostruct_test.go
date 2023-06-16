@@ -19,8 +19,9 @@ func TestNewDecoder(t *testing.T) {
 func TestDecode(t *testing.T) {
 	type (
 		Server struct {
-			Name string `json:"name"`
-			Age  int    `json:"age"`
+			Name    string `json:"name"`
+			Age     int    `json:"age"`
+			private string `json:"private"`
 		}
 	)
 	srv := Server{Name: "test", Age: 30}

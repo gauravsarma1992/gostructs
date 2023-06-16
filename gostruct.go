@@ -54,6 +54,9 @@ func (decoder *Decoder) Decode(resource interface{}) (result *DecodedResult, err
 			attrKey string
 			attrVal interface{}
 		)
+		if resourceType.Field(idx).IsExported() == false {
+			continue
+		}
 		attrKey = resourceType.Field(idx).Name
 		attrVal = resourceValue.FieldByName(attrKey).Interface()
 
