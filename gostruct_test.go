@@ -33,3 +33,19 @@ func TestDecode(t *testing.T) {
 	assert.Equal(t, result.Attributes["name"], "test")
 	assert.Equal(t, result.Attributes["age"], 30)
 }
+
+func TestDecodeFree(t *testing.T) {
+	freeMap := make(map[string]interface{})
+	freeMap["name"] = "server"
+	freeMap["attributes"] = make(map[string]interface{})
+	freeMap["attributes"].(map[string]interface{})["age"] = 30
+	freeMap["attributes"].(map[string]interface{})["name"] = "test"
+
+	decoder, _ := NewDecoder(&DecoderConfig{ShouldSnakeCase: true})
+	result, _ := decoder.DecodeFreeMap(freeMap)
+
+	assert.Equal(t, result.Name, "server")
+	assert.Equal(t, result.Attributes["name"], "test")
+	assert.Equal(t, result.Attributes["age"], 30)
+
+}

@@ -35,6 +35,14 @@ func (decoder *Decoder) convertKey(key string) (result string) {
 	return
 }
 
+func (decoder *Decoder) revertKey(key string) (result string) {
+	result = key
+	if decoder.config.ShouldSnakeCase {
+		result = inflection.Camelize(key, true)
+	}
+	return
+}
+
 func (decoder *Decoder) Decode(resource interface{}) (result *DecodedResult, err error) {
 	var (
 		resourceType  reflect.Type
@@ -61,6 +69,20 @@ func (decoder *Decoder) Decode(resource interface{}) (result *DecodedResult, err
 		attrVal = resourceValue.FieldByName(attrKey).Interface()
 
 		result.Attributes[decoder.convertKey(attrKey)] = attrVal
+	}
+	return
+}
+
+func (decoder *Decoder) DecodeFreeMap(resource map[string]interface{}) (result *DecodedResult, err error) {
+	if resource == nil {
+		return
+	}
+	result = &DecodedResult{
+		Name:       resource["name"].(string),
+		Attributes: make(map[string]interface{}),
+	}
+	for key, val := range resource["attributes"].(map[string]interface{}) {
+		result.Attributes[decoder.convertKey(key)] = val
 	}
 	return
 }
